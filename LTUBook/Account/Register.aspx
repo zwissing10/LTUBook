@@ -36,6 +36,31 @@
                     CssClass="text-danger" Display="Dynamic" ErrorMessage="The password and confirmation password do not match." />
             </div>
         </div>
+        <br />
+        <div class="form-group">
+            <asp:Label runat="server" AssociatedControlID="FirstName" CssClass="col-md-2 control-label">First Name</asp:Label>
+            <div class="col-md-10">
+                <asp:TextBox runat="server" ID="FirstName" CssClass="form-control" TextMode="SingleLine" />
+                <asp:RequiredFieldValidator runat="server" ControlToValidate="FirstName"
+                    CssClass="text-danger" ErrorMessage="First Name is required." />
+            </div>
+        </div>
+        <div class="form-group">
+            <asp:Label runat="server" AssociatedControlID="LastName" CssClass="col-md-2 control-label">Last Name</asp:Label>
+            <div class="col-md-10">
+                <asp:TextBox runat="server" ID="LastName" CssClass="form-control" TextMode="SingleLine" />
+                <asp:RequiredFieldValidator runat="server" ControlToValidate="LastName"
+                    CssClass="text-danger" ErrorMessage="Last Name is required." />
+            </div>
+        </div>
+        <div class="form-group">
+            <asp:Label runat="server" AssociatedControlID="Age" CssClass="col-md-2 control-label">Age</asp:Label>
+            <div class="col-md-3">
+                <asp:TextBox runat="server" ID="Age" CssClass="form-control" TextMode="Number" />
+                <asp:RangeValidator runat="server" ControlToValidate="Age" MinimumValue="13" MaximumValue="125" Type="Integer"
+                    CssClass="text-danger" ErrorMessage="Must be 13 or older to register and must enter a valid age" />
+            </div>
+        </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <asp:Button runat="server" OnClick="CreateUser_Click" Text="Register" CssClass="btn btn-default" />

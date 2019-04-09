@@ -394,6 +394,15 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903052039269_InitialCreate.cs" />
+    <Compile Include="Migrations\201903052039269_InitialCreate.Designer.cs">
+      <DependentUpon>201903052039269_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904091941257_NameAge.cs" />
+    <Compile Include="Migrations\201904091941257_NameAge.Designer.cs">
+      <DependentUpon>201904091941257_NameAge.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Site.Master.cs">
@@ -421,6 +430,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201903052039269_InitialCreate.resx">
+      <DependentUpon>201903052039269_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904091941257_NameAge.resx">
+      <DependentUpon>201904091941257_NameAge.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
