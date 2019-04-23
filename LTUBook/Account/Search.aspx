@@ -6,12 +6,18 @@
         <asp:Literal runat="server" ID="ErrorMessage" />
     </p>
     <div>
-        <div runat="server" class="form-group">
-            <asp:Label runat="server" AssociatedControlID="SearchBox" CssClass="col-md-6">Search for someone...</asp:Label>
-            <asp:TextBox runat="server" ID="SearchBox" TextMode="SingleLine" CssClass="col-md-6 form-control" />
+        <div class="form-horizontal">
+            <div class="form-group">
+                <asp:Label runat="server" AssociatedControlID="SearchBox" CssClass="col-xl-4 control-label">Search for someone...</asp:Label>
+                <div class="col-xl-10">
+                    <asp:TextBox runat="server" ID="SearchBox" TextMode="SingleLine" CssClass="form-control" />
+                    <asp:RequiredFieldValidator runat="server" ControlToValidate="SearchBox" CssClass="text-danger" ErrorMessage="Enter a name to search for" />
+                </div>
+            </div>
+            <asp:Button runat="server" OnClick="userSearch" Text="Search" CssClass="btn btn-default" />
         </div>
-        <asp:Button runat="server" OnClick="userSearch" Text="Search" CssClass="btn btn-default" />
     </div>
+    <br />
     <div class="col-md-12">
         <asp:Table runat="server" ID="SearchTable" CssClass="table table-hover">
         </asp:Table>
