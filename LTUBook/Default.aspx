@@ -13,19 +13,19 @@
             </div>
         </AnonymousTemplate>
         <LoggedInTemplate>
+            <link rel="stylesheet" runat="server" media="screen" href="~/Content/HomePage.css" />
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
             <div class="jumbotron text-align-center">
                 <h1><b>LTUBook</b></h1>
             </div>
             <div class="col-md-6">
-                <a runat="server" href="~/Notifications" class="btn btn-primary btn-lg">View All Notifications</a>
+                <a runat="server" href="~/Notifications" class="btn btn-primary">View All Notifications</a>
             </div>
             <div class="col-md-6">
-                <a runat="server" href="~/UserSearch" class="btn btn-primary btn-lg">Search</a>
+                <a runat="server" href="~/Account/Search" class="btn btn-primary">Search</a>
             </div>
-            </br>
-            <div class="col-md-12">
-                <a runat="server" href="~/Account/Manage" class="btn btn-primary btn-lg">Manage Account Settings</a>
-            </div>
+            <br />
+            <br />
         </LoggedInTemplate>
     </asp:LoginView>
 </asp:Content>
