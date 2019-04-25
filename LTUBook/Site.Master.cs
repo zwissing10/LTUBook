@@ -76,6 +76,11 @@ namespace LTUBook
         {
             Context.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
         }
+
+        protected void SetSession_LoggedIn()
+        {
+            //Session["userPageID"] = "";
+        }
     }
 
 }

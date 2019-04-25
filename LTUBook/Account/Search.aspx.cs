@@ -17,12 +17,14 @@ namespace LTUBook.Account
         SqlConnection db;
         protected void Page_Load(object sender, EventArgs e)
         {
-            db = new SqlConnection("Data Source = (LocalDb)\\MSSQLLocalDB; Initial Catalog = aspnet-LTUBook-20190228033437; User id = Search; Password = password;");
-            db.Open();
+            
         }
 
         protected void userSearch(object sender, EventArgs e)
         {
+            db = new SqlConnection("Data Source = (LocalDb)\\MSSQLLocalDB; Initial Catalog = aspnet-LTUBook-20190228033437; User id = Search; Password = password;");
+            db.Open();
+
             TableHeaderRow header = new TableHeaderRow();
             header.Cells.Add(new TableHeaderCell { CssClass = "text-center", Text = "User Results" });
             SearchTable.Rows.Add(header);
@@ -33,13 +35,15 @@ namespace LTUBook.Account
             while (dr.Read())
             {
                 string queriedName = dr.GetValue(15).ToString();
-                if (queriedName.CompareTo("") != 0)
+                if (queriedName != null)
                 {
                     TableRow row = new TableRow();
                     row.Cells.Add(new TableCell { Text = queriedName });
                     SearchTable.Rows.Add(row);
                 }
             }
+            dr.Close();
+            db.Close();
         }
     }
 }
