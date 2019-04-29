@@ -27,7 +27,7 @@ namespace LTUBook.Account
                 loggedUser = false;
             }
 
-            db = new SqlConnection("Data Source = (LocalDb)\\MSSQLLocalDB; Initial Catalog = aspnet-LTUBook-20190228033437; User id = Search; Password = password;");
+            db = new SqlConnection("Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=aspnet-LTUBook-20190228033437;Integrated Security=True");
             db.Open();
             
             generateNotifTable(userPageID, loggedUser);
