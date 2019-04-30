@@ -1,4 +1,4 @@
-﻿<%@ Page Title="UserPage" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Page.aspx.cs" Inherits="LTUBook.Account.Page" %>
+﻿<%@ Page Title="UserPage" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="UserPage.aspx.cs" Inherits="LTUBook.Account.UserPage" %>
 
 <asp:Content runat="server" ID="BodyContent" ContentPlaceHolderID="MainContent">
     <p class="text-danger">

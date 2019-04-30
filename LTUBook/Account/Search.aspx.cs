@@ -9,6 +9,7 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Data.SqlClient;
 using LTUBook.Models;
+using Microsoft.AspNet.Identity;
 
 namespace LTUBook.Account
 {
@@ -17,7 +18,10 @@ namespace LTUBook.Account
         SqlConnection db;
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+            if(IsPostBack)
+            {
+                userSearch(sender, e);
+            }
         }
 
         protected void userSearch(object sender, EventArgs e)
@@ -26,24 +30,69 @@ namespace LTUBook.Account
             db.Open();
 
             TableHeaderRow header = new TableHeaderRow();
-            header.Cells.Add(new TableHeaderCell { CssClass = "text-center", Text = "User Results" });
+            header.Cells.Add(new TableHeaderCell { CssClass = "text-center", Text = "User Results", ColumnSpan = 2});
             SearchTable.Rows.Add(header);
 
-            string searchName = SearchBox.Text;
-            SqlCommand cmd = new SqlCommand("SELECT * FROM AspNetUsers WHERE FullName LIKE '%" + searchName + "%';", db);
+            List<string> friends = new List<string>();
+            SqlCommand cmd = new SqlCommand("SELECT [FriendId] FROM Friends WHERE UserId = '" + User.Identity.GetUserId() + "';", db);
             SqlDataReader dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                friends.Add(dr.GetValue(0).ToString());
+            }
+            dr.Close();
+
+            string searchName = SearchBox.Text;
+            cmd.CommandText = "SELECT * FROM AspNetUsers WHERE FullName LIKE '%" + searchName + "%';";
+            dr = cmd.ExecuteReader();
             while (dr.Read())
             {
                 string queriedName = dr.GetValue(15).ToString();
                 if (queriedName != null)
                 {
+                    //< a class=\"btn btn-default disabled\">Already Friends!</a>
                     TableRow row = new TableRow();
-                    row.Cells.Add(new TableCell { Text = queriedName });
+                    if (friends.Contains(dr.GetValue(0).ToString()))
+                    {
+                        Button button = new Button { Text = "Already Friends!", CssClass = "btn btn-default disabled" };
+                        TableCell tc = new TableCell { HorizontalAlign = HorizontalAlign.Right };
+                        tc.Controls.Add(button);
+                        row.Cells.Add(new TableCell { Text = queriedName, VerticalAlign = VerticalAlign.Middle });
+                        row.Cells.Add(tc);
+                    }
+                    else
+                    {
+                        Button button = new Button { Text = "Send Friend Request", CssClass = "btn btn-default", ID = dr.GetValue(0).ToString() };
+                        button.Click += SendReq_Click;
+                        TableCell tc = new TableCell { HorizontalAlign = HorizontalAlign.Right };
+                        tc.Controls.Add(button);
+                        row.Cells.Add(new TableCell { Text = queriedName, VerticalAlign = VerticalAlign.Middle });
+                        row.Cells.Add(tc);
+                    }
                     SearchTable.Rows.Add(row);
                 }
             }
             dr.Close();
             db.Close();
+        }
+
+        protected void SendReq_Click(object sender, EventArgs e)
+        {
+            db = new SqlConnection("Data Source = (LocalDb)\\MSSQLLocalDB;Initial Catalog=aspnet-LTUBook-20190228033437;Integrated Security=True");
+            db.Open();
+
+            Button button = (Button)sender;
+            string recUserId = button.ID;
+            string senderId = User.Identity.GetUserId();
+            string insVals = "'" + recUserId + "','" + senderId + "','',1,'" + DateTime.Now.ToString() + "'";
+
+            SqlCommand cmd = new SqlCommand("INSERT INTO Notifications(UserId, CreationUser, Content, FriendReq, DateCreated) VALUES (" + insVals + ");", db);
+            int rowsAffected = cmd.ExecuteNonQuery();
+            if(rowsAffected != 1)
+            {
+                throw new Exception("Query to create FR returned " + rowsAffected + " affected rows");
+            }
+            //Update button
         }
     }
 }

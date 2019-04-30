@@ -14,7 +14,7 @@
                     <asp:RequiredFieldValidator runat="server" ControlToValidate="SearchBox" CssClass="text-danger" ErrorMessage="Enter a name to search for" />
                 </div>
             </div>
-            <asp:Button runat="server" OnClick="userSearch" Text="Search" CssClass="btn btn-default" />
+            <asp:Button runat="server" Text="Search" CssClass="btn btn-default" />
         </div>
     </div>
     <br />

@@ -19,7 +19,7 @@
                 <h1><b>LTUBook</b></h1>
             </div>
             <div class="col-md-6">
-                <a runat="server" href="~/Account/Notifications" class="btn btn-primary">View All Notifications</a>
+                <a runat="server" href="~/Account/UserPage?id=0" class="btn btn-primary">View All Notifications</a>
             </div>
             <div class="col-md-6">
                 <a runat="server" href="~/Account/Search" class="btn btn-primary">Search</a>

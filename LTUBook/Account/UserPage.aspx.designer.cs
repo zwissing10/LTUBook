@@ -10,7 +10,7 @@
 namespace LTUBook.Account {
     
     
-    public partial class Page {
+    public partial class UserPage {
         
         /// <summary>
         /// ErrorMessage control.
