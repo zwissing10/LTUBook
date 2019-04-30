@@ -51,13 +51,14 @@ namespace LTUBook.Account
                 db.Close();
 
                 generateNotifTable(userPageID, loggedUser);
+                GenerateFriendList(userPageID, loggedUser);
             //}
         }
 
         protected void generateNotifTable(string id, bool loggedUser)
         {
             TableHeaderRow header = new TableHeaderRow();
-            header.Cells.Add(new TableHeaderCell { CssClass = "text-center", Text = "Notifications" });
+            header.Cells.Add(new TableHeaderCell { CssClass = "text-center", Text = "Notifications", ColumnSpan=2 });
             header.Cells.Add(new TableHeaderCell { CssClass = "text-center", Text = "Date Posted" });
             NotifTable.Rows.Add(header);
 
@@ -103,6 +104,44 @@ namespace LTUBook.Account
                 }
                 row.Cells.Add(new TableCell { Text = dateCreated });
                 NotifTable.Rows.Add(row);
+            }
+            db.Close();
+        }
+
+        protected void GenerateFriendList(string id, bool user)
+        {
+            TableHeaderRow header = new TableHeaderRow();
+            header.Cells.Add(new TableHeaderCell { CssClass = "text-center", Text = "Name" });
+            header.Cells.Add(new TableHeaderCell { CssClass = "text-center", Text = "Delete" });
+            FriendTable.Rows.Add(header);
+
+            db = new SqlConnection("Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=aspnet-LTUBook-20190228033437;Integrated Security=True");
+            db.Open();
+            SqlCommand cmd = new SqlCommand("SELECT [FullName], [FriendId] FROM AspNetUsers n JOIN Friends f ON n.Id = f.FriendId WHERE UserId = '" + id + "';", db);
+            SqlDataReader dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                string friendName = dr.GetValue(0).ToString();
+                string friendId = dr.GetValue(1).ToString();
+
+
+                TableRow row = new TableRow();
+
+                if (loggedUser)
+                {
+                    row.Cells.Add(new TableCell { Text = friendName });
+                   
+                }
+                else
+                {
+                    
+                }
+                Button button3 = new Button { Text = "Delete Friend", CssClass = "btn btn-default", ID = friendId + "_deletefriend" };
+                button3.Click += DeleteFriend_Click;
+                TableCell tc2 = new TableCell { HorizontalAlign = HorizontalAlign.Right };
+                tc2.Controls.Add(button3);
+                FriendTable.Rows.Add(row);
+                row.Cells.Add(tc2);
             }
             db.Close();
         }
@@ -159,6 +198,28 @@ namespace LTUBook.Account
             if (rowsAffected != 1)
             {
                 throw new Exception("Query to delete FR returned " + rowsAffected + " affected rows");
+            }
+
+            //Update button to disabled
+            db.Close();
+        }
+
+        protected void DeleteFriend_Click(object sender, EventArgs e)
+        {
+            db.Open();
+
+            Button button = (Button)sender;
+            string senderId = button.ID;
+            string userId = User.Identity.GetUserId();
+
+            string[] splitStr = senderId.Split('_');
+            senderId = splitStr[0];
+
+            SqlCommand cmd = new SqlCommand("DELETE FROM Friends WHERE (FriendId = '" + senderId + "' AND UserId = '" + userId + "') OR (UserId = '" + senderId + "' AND FriendId = '" + userId + "')", db);
+            int rowsAffected = cmd.ExecuteNonQuery();
+            if (rowsAffected != 2)
+            {
+                throw new Exception("Query to delete Friend returned " + rowsAffected + " affected rows");
             }
 
             //Update button to disabled

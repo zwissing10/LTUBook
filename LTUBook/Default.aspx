@@ -27,6 +27,9 @@
             <div class="col-md-6">
                 <a runat="server" href="~/Account/Post" class="btn btn-primary">Post</a>
             </div>
+            <div class="col-md-6">
+                <a runat="server" href="~/Account/UserPage?id=0" class="btn btn-primary">Friends</a>
+            </div>
             <br />
             <br />
         </LoggedInTemplate>
