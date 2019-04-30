@@ -118,6 +118,7 @@ namespace LTUBook.Account
             string[] splitStr = friendId.Split('_');
             friendId = splitStr[0];
 
+            //Add entries into friends table for both users
             SqlCommand cmd = new SqlCommand("INSERT INTO Friends(UserId, FriendId) VALUES ('" + userId + "','" + friendId + "');", db);
             int rowsAffected = cmd.ExecuteNonQuery();
             if (rowsAffected != 1)
@@ -131,7 +132,14 @@ namespace LTUBook.Account
                 throw new Exception("Query to create friend row returned " + rowsAffected + " affected rows");
             }
 
-            //DELETE NOTIFICATION
+            //Delete request
+            cmd.CommandText = "DELETE FROM Notifications WHERE UserId = '" + userId + "' AND CreationUser = '" + friendId + "' AND FriendReq = 1";
+            rowsAffected = cmd.ExecuteNonQuery();
+            if (rowsAffected != 1)
+            {
+                throw new Exception("Query to delete FR returned " + rowsAffected + " affected rows");
+            }
+
             db.Close();
         }
 

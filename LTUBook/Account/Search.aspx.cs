@@ -49,8 +49,7 @@ namespace LTUBook.Account
             {
                 string queriedName = dr.GetValue(15).ToString();
                 if (queriedName != null)
-                {
-                    //< a class=\"btn btn-default disabled\">Already Friends!</a>
+                { 
                     TableRow row = new TableRow();
                     if (friends.Contains(dr.GetValue(0).ToString()))
                     {
@@ -86,13 +85,26 @@ namespace LTUBook.Account
             string senderId = User.Identity.GetUserId();
             string insVals = "'" + recUserId + "','" + senderId + "','',1,'" + DateTime.Now.ToString() + "'";
 
-            SqlCommand cmd = new SqlCommand("INSERT INTO Notifications(UserId, CreationUser, Content, FriendReq, DateCreated) VALUES (" + insVals + ");", db);
+            SqlCommand cmd = new SqlCommand("SELECT COUNT(*) as [NotificationCount] FROM Notifications WHERE UserId = '" + recUserId + "' AND CreationUser = '" + senderId + "' AND FriendReq = 1;", db);
+            SqlDataReader dr = cmd.ExecuteReader();
+            while(dr.Read())
+            {
+                if (dr.GetValue(0).ToString().CompareTo("0") != 0)
+                {
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Friend Request Already Sent!')", true);
+                    return;
+                }
+            }
+            dr.Close();
+
+            cmd.CommandText = "INSERT INTO Notifications(UserId, CreationUser, Content, FriendReq, DateCreated) VALUES (" + insVals + ");";
             int rowsAffected = cmd.ExecuteNonQuery();
             if(rowsAffected != 1)
             {
                 throw new Exception("Query to create FR returned " + rowsAffected + " affected rows");
             }
-            //Update button
+
+            button.Enabled = false;
         }
     }
 }
