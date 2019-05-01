@@ -6,7 +6,7 @@
         <div class="form-group">
             <asp:Label runat="server" AssociatedControlID="UserList" CssClass="col-xl-4 control-label">Select user to post to:</asp:Label>
             <div class="col-xl-6">
-                <asp:DropDownList runat="server" ID="UserList"></asp:DropDownList>
+                <asp:DropDownList runat="server" ID="UserList" CssClass="form-control" OnSelectedIndexChanged="UserList_SelectionChanged"></asp:DropDownList>
             </div>
         </div>
         <div class="form-group">

@@ -58,17 +58,21 @@ namespace LTUBook.Account
                         tc.Controls.Add(button);
                         row.Cells.Add(new TableCell { Text = queriedName, VerticalAlign = VerticalAlign.Middle });
                         row.Cells.Add(tc);
+                        SearchTable.Rows.Add(row);
                     }
                     else
                     {
-                        Button button = new Button { Text = "Send Friend Request", CssClass = "btn btn-default", ID = dr.GetValue(0).ToString() };
-                        button.Click += SendReq_Click;
-                        TableCell tc = new TableCell { HorizontalAlign = HorizontalAlign.Right };
-                        tc.Controls.Add(button);
-                        row.Cells.Add(new TableCell { Text = queriedName, VerticalAlign = VerticalAlign.Middle });
-                        row.Cells.Add(tc);
+                        if (dr.GetValue(0).ToString().CompareTo(User.Identity.GetUserId()) != 0)
+                        {
+                            Button button = new Button { Text = "Send Friend Request", CssClass = "btn btn-default", ID = dr.GetValue(0).ToString() };
+                            button.Click += SendReq_Click;
+                            TableCell tc = new TableCell { HorizontalAlign = HorizontalAlign.Right };
+                            tc.Controls.Add(button);
+                            row.Cells.Add(new TableCell { Text = queriedName, VerticalAlign = VerticalAlign.Middle });
+                            row.Cells.Add(tc);
+                            SearchTable.Rows.Add(row);
+                        }
                     }
-                    SearchTable.Rows.Add(row);
                 }
             }
             dr.Close();

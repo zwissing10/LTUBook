@@ -16,43 +16,36 @@ namespace LTUBook.Account
         bool loggedUser;
         protected void Page_Load(object sender, EventArgs e)
         {
-            /*if (IsPostBack)
+            loggedUser = false;
+            if (Request.QueryString["id"] == "0" || !Request.QueryString.AllKeys.Contains("id"))
             {
-                generateNotifTable(userPageID, loggedUser);
-            }*/
-            //else
-            //{
+                userPageID = User.Identity.GetUserId();
+                loggedUser = true;
+            }
+            else
+            {
+                userPageID = Request.QueryString["id"].ToString();
                 loggedUser = false;
-                if (Request.QueryString["id"] == "0" || !Request.QueryString.AllKeys.Contains("id"))
-                {
-                    userPageID = User.Identity.GetUserId();
-                    loggedUser = true;
-                }
-                else
-                {
-                    userPageID = Request.QueryString["id"].ToString();
-                    loggedUser = false;
-                }
+            }
 
-                db = new SqlConnection("Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=aspnet-LTUBook-20190228033437;Integrated Security=True");
-                db.Open();
+            db = new SqlConnection("Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=aspnet-LTUBook-20190228033437;Integrated Security=True");
+            db.Open();
 
-                SqlCommand cmd = new SqlCommand("SELECT [FullName] FROM AspNetUsers WHERE Id = '" + userPageID + "';", db);
-                SqlDataReader dr = cmd.ExecuteReader();
-                while (dr.Read())
+            SqlCommand cmd = new SqlCommand("SELECT [FullName] FROM AspNetUsers WHERE Id = '" + userPageID + "';", db);
+            SqlDataReader dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                string fullName = dr.GetValue(0).ToString();
+                if (fullName != null)
                 {
-                    string fullName = dr.GetValue(0).ToString();
-                    if (fullName != null)
-                    {
-                        userLabel.Text = fullName + "'s Page";
-                    }
+                    userLabel.Text = fullName + "'s Page";
                 }
-                dr.Close();
-                db.Close();
+            }
+            dr.Close();
+            db.Close();
 
-                generateNotifTable(userPageID, loggedUser);
-                GenerateFriendList(userPageID, loggedUser);
-            //}
+            generateNotifTable(userPageID, loggedUser);
+            GenerateFriendList(userPageID, loggedUser, sender, e);
         }
 
         protected void generateNotifTable(string id, bool loggedUser)
@@ -80,7 +73,7 @@ namespace LTUBook.Account
                 {
                     if (isFriendReq.CompareTo("0") == 0)
                     {
-                        row.Cells.Add(new TableCell { Text = createdUser + " posted to your page: " + NotifBody });
+                        row.Cells.Add(new TableCell { Text = createdUser + " posted to your page: " + NotifBody, ColumnSpan = 2 });
                     }
                     else
                     {
@@ -99,7 +92,7 @@ namespace LTUBook.Account
                 {
                     if (isFriendReq.CompareTo("0") == 0)
                     {
-                        row.Cells.Add(new TableCell { Text = createdUser + " posted to" + userLabel.Text.ToString() + "'s page: " + NotifBody });
+                        row.Cells.Add(new TableCell { Text = createdUser + " posted to" + userLabel.Text.ToString() + "'s page: " + NotifBody, ColumnSpan = 2 });
                     }
                 }
                 row.Cells.Add(new TableCell { Text = dateCreated });
@@ -108,7 +101,7 @@ namespace LTUBook.Account
             db.Close();
         }
 
-        protected void GenerateFriendList(string id, bool user)
+        protected void GenerateFriendList(string id, bool user, object sender, EventArgs e)
         {
             TableHeaderRow header = new TableHeaderRow();
             header.Cells.Add(new TableHeaderCell { CssClass = "text-center", Text = "Name" });
@@ -171,14 +164,14 @@ namespace LTUBook.Account
                 throw new Exception("Query to create friend row returned " + rowsAffected + " affected rows");
             }
 
-            //Delete request
+            //Delete request from notifications
             cmd.CommandText = "DELETE FROM Notifications WHERE UserId = '" + userId + "' AND CreationUser = '" + friendId + "' AND FriendReq = 1";
             rowsAffected = cmd.ExecuteNonQuery();
             if (rowsAffected != 1)
             {
                 throw new Exception("Query to delete FR returned " + rowsAffected + " affected rows");
             }
-
+            Server.TransferRequest(Request.Url.AbsolutePath, false);
             db.Close();
         }
 
@@ -199,8 +192,7 @@ namespace LTUBook.Account
             {
                 throw new Exception("Query to delete FR returned " + rowsAffected + " affected rows");
             }
-
-            //Update button to disabled
+            Server.TransferRequest(Request.Url.AbsolutePath, false);
             db.Close();
         }
 
@@ -221,8 +213,7 @@ namespace LTUBook.Account
             {
                 throw new Exception("Query to delete Friend returned " + rowsAffected + " affected rows");
             }
-
-            //Update button to disabled
+            Server.TransferRequest(Request.Url.AbsolutePath, false);
             db.Close();
         }
     }
