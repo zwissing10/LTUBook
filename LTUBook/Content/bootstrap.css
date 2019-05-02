@@ -886,7 +886,6 @@ pre code {
 
 .col-xs-3 {
   width: 25%;
-  float: left;
 }
 
 .col-xs-4 {
@@ -1131,7 +1130,6 @@ pre code {
   }
   .col-md-12 {
     width: 75%;
-    float: right;
   }
   .col-md-push-0 {
     left: auto;
