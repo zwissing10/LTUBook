@@ -54,8 +54,10 @@ namespace LTUBook.Account
                     if (friends.Contains(dr.GetValue(0).ToString()))
                     {
                         Button button = new Button { Text = "Already Friends!", CssClass = "btn btn-default disabled" };
+                        Button button2 = new Button { Text = "View Page", CssClass = "btn btn-default", PostBackUrl = "~/Account/UserPage?id=" + dr.GetValue(0).ToString() };
                         TableCell tc = new TableCell { HorizontalAlign = HorizontalAlign.Right };
                         tc.Controls.Add(button);
+                        tc.Controls.Add(button2);
                         row.Cells.Add(new TableCell { Text = queriedName, VerticalAlign = VerticalAlign.Middle });
                         row.Cells.Add(tc);
                         SearchTable.Rows.Add(row);
@@ -65,9 +67,11 @@ namespace LTUBook.Account
                         if (dr.GetValue(0).ToString().CompareTo(User.Identity.GetUserId()) != 0)
                         {
                             Button button = new Button { Text = "Send Friend Request", CssClass = "btn btn-default", ID = dr.GetValue(0).ToString() };
+                            Button button2 = new Button { Text = "View Page", CssClass = "btn btn-default", PostBackUrl = "~/Account/UserPage?id=" + dr.GetValue(0).ToString() };
                             button.Click += SendReq_Click;
                             TableCell tc = new TableCell { HorizontalAlign = HorizontalAlign.Right };
                             tc.Controls.Add(button);
+                            tc.Controls.Add(button2);
                             row.Cells.Add(new TableCell { Text = queriedName, VerticalAlign = VerticalAlign.Middle });
                             row.Cells.Add(tc);
                             SearchTable.Rows.Add(row);
@@ -110,5 +114,14 @@ namespace LTUBook.Account
 
             button.Enabled = false;
         }
+
+        /*protected void ViewPage_Click(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            string[] splitStr = button.ID.ToString().Split('_');
+            string userPageId = splitStr[0];
+
+            
+        }*/
     }
 }

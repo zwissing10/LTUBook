@@ -87,15 +87,16 @@ namespace LTUBook.Account
                         row.Cells.Add(new TableCell { Text = createdUser + " added you as a friend!", VerticalAlign = VerticalAlign.Middle });
                         row.Cells.Add(tc);
                     }
+                    row.Cells.Add(new TableCell { Text = dateCreated });
                 }
                 else
                 {
                     if (isFriendReq.CompareTo("0") == 0)
                     {
                         row.Cells.Add(new TableCell { Text = createdUser + " posted to" + userLabel.Text.ToString() + "'s page: " + NotifBody, ColumnSpan = 2 });
+                        row.Cells.Add(new TableCell { Text = dateCreated });
                     }
                 }
-                row.Cells.Add(new TableCell { Text = dateCreated });
                 NotifTable.Rows.Add(row);
             }
             db.Close();
@@ -123,18 +124,17 @@ namespace LTUBook.Account
                 if (loggedUser)
                 {
                     row.Cells.Add(new TableCell { Text = friendName });
-                   
+                    Button button3 = new Button { Text = "Delete Friend", CssClass = "btn btn-default", ID = friendId + "_deletefriend" };
+                    button3.Click += DeleteFriend_Click;
+                    TableCell tc2 = new TableCell { HorizontalAlign = HorizontalAlign.Right };
+                    tc2.Controls.Add(button3);
+                    row.Cells.Add(tc2);
                 }
                 else
                 {
-                    
+                    row.Cells.Add(new TableCell { Text = friendName, ColumnSpan = 2 });
                 }
-                Button button3 = new Button { Text = "Delete Friend", CssClass = "btn btn-default", ID = friendId + "_deletefriend" };
-                button3.Click += DeleteFriend_Click;
-                TableCell tc2 = new TableCell { HorizontalAlign = HorizontalAlign.Right };
-                tc2.Controls.Add(button3);
                 FriendTable.Rows.Add(row);
-                row.Cells.Add(tc2);
             }
             db.Close();
         }
