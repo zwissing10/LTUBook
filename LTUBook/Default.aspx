@@ -18,17 +18,14 @@
             <div class="jumbotron text-align-center">
                 <h1><b>LTUBook</b></h1>
             </div>
-            <div class="col-md-6">
-                <a runat="server" href="~/Account/UserPage?id=0" class="btn btn-primary">View All Notifications</a>
+            <div class="col-md-4">
+                <a runat="server" href="~/Account/UserPage?id=0" class="btn btn-primary">My Page</a>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <a runat="server" href="~/Account/Search" class="btn btn-primary">Search</a>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <a runat="server" href="~/Account/Post" class="btn btn-primary">Post</a>
-            </div>
-            <div class="col-md-6">
-                <a runat="server" href="~/Account/UserPage?id=0" class="btn btn-primary">Friends</a>
             </div>
             <br />
             <br />

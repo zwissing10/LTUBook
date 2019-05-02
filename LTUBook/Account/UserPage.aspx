@@ -11,7 +11,7 @@
         <asp:Table runat="server" ID="NotifTable" CssClass="table table-bordered">
         </asp:Table>
     </div>
-    <div class="col-md-12">
+    <div class="col-xs-3">
         <asp:Table runat="server" ID="FriendTable" CssClass="table table-bordered">
         </asp:Table>
     </div>
