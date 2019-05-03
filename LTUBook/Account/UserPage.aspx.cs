@@ -105,19 +105,36 @@ namespace LTUBook.Account
         protected void GenerateFriendList(string id, bool user, object sender, EventArgs e)
         {
             TableHeaderRow header = new TableHeaderRow();
-            header.Cells.Add(new TableHeaderCell { CssClass = "text-center", Text = "Name" });
-            header.Cells.Add(new TableHeaderCell { CssClass = "text-center", Text = "Delete" });
-            FriendTable.Rows.Add(header);
+            header.Cells.Add(new TableHeaderCell { CssClass = "text-center", Text = "Friends" });
 
             db = new SqlConnection("Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=aspnet-LTUBook-20190228033437;Integrated Security=True");
             db.Open();
+
+            List<string> nonLoggedFriends = new List<string>(); 
+            if (!loggedUser)
+            {
+                header.Cells.Add(new TableHeaderCell { CssClass = "text-center", Text = "Add Friend" });
+                SqlCommand cmd2 = new SqlCommand("SELECT [FriendId] FROM Friends WHERE UserId = '" + User.Identity.GetUserId() + "';", db);
+                SqlDataReader dr2 = cmd2.ExecuteReader();
+                //FIX WHERE CURRENTLY LOGGED IN USER SHOWS UP
+                while (dr2.Read())
+                {
+                    nonLoggedFriends.Add(dr2.GetValue(0).ToString());
+                }
+                dr2.Close();
+            }
+            else
+            {
+                header.Cells.Add(new TableHeaderCell { CssClass = "text-center", Text = "Delete" });
+            }
+            FriendTable.Rows.Add(header);
+
             SqlCommand cmd = new SqlCommand("SELECT [FullName], [FriendId] FROM AspNetUsers n JOIN Friends f ON n.Id = f.FriendId WHERE UserId = '" + id + "';", db);
             SqlDataReader dr = cmd.ExecuteReader();
             while (dr.Read())
             {
                 string friendName = dr.GetValue(0).ToString();
                 string friendId = dr.GetValue(1).ToString();
-
 
                 TableRow row = new TableRow();
 
@@ -132,7 +149,26 @@ namespace LTUBook.Account
                 }
                 else
                 {
-                    row.Cells.Add(new TableCell { Text = friendName, ColumnSpan = 2 });
+                    if (friendId == User.Identity.GetUserId())
+                    {
+                    }
+                    else if (!nonLoggedFriends.Contains(friendId))
+                    {
+                        row.Cells.Add(new TableCell { Text = friendName });
+                        Button button3 = new Button { Text = "Add Friend", CssClass = "btn btn-default", ID = friendId + "_sendReq" };
+                        button3.Click += SendReq_Click;
+                        TableCell tc2 = new TableCell { HorizontalAlign = HorizontalAlign.Right };
+                        tc2.Controls.Add(button3);
+                        row.Cells.Add(tc2);
+                    }
+                    else
+                    {
+                        row.Cells.Add(new TableCell { Text = friendName });
+                        Button button3 = new Button { Text = "Already Friends!", CssClass = "btn btn-default disabled" };
+                        TableCell tc2 = new TableCell { HorizontalAlign = HorizontalAlign.Right };
+                        tc2.Controls.Add(button3);
+                        row.Cells.Add(tc2);
+                    }
                 }
                 FriendTable.Rows.Add(row);
             }
@@ -215,6 +251,39 @@ namespace LTUBook.Account
             }
             Server.TransferRequest(Request.Url.AbsolutePath, false);
             db.Close();
+        }
+
+        protected void SendReq_Click(object sender, EventArgs e)
+        {
+            db = new SqlConnection("Data Source = (LocalDb)\\MSSQLLocalDB;Initial Catalog=aspnet-LTUBook-20190228033437;Integrated Security=True");
+            db.Open();
+
+            Button button = (Button)sender;
+            string[] splitStr = button.ID.ToString().Split('_');
+            string recUserId = splitStr[0];
+            string senderId = User.Identity.GetUserId();
+            string insVals = "'" + recUserId + "','" + senderId + "','',1,'" + DateTime.Now.ToString() + "'";
+
+            SqlCommand cmd = new SqlCommand("SELECT COUNT(*) as [NotificationCount] FROM Notifications WHERE UserId = '" + recUserId + "' AND CreationUser = '" + senderId + "' AND FriendReq = 1;", db);
+            SqlDataReader dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                if (dr.GetValue(0).ToString().CompareTo("0") != 0)
+                {
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Friend Request Already Sent!')", true);
+                    return;
+                }
+            }
+            dr.Close();
+
+            cmd.CommandText = "INSERT INTO Notifications(UserId, CreationUser, Content, FriendReq, DateCreated) VALUES (" + insVals + ");";
+            int rowsAffected = cmd.ExecuteNonQuery();
+            if (rowsAffected != 1)
+            {
+                throw new Exception("Query to create FR returned " + rowsAffected + " affected rows");
+            }
+
+            button.Enabled = false;
         }
     }
 }

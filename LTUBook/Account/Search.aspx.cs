@@ -95,7 +95,7 @@ namespace LTUBook.Account
 
             SqlCommand cmd = new SqlCommand("SELECT COUNT(*) as [NotificationCount] FROM Notifications WHERE UserId = '" + recUserId + "' AND CreationUser = '" + senderId + "' AND FriendReq = 1;", db);
             SqlDataReader dr = cmd.ExecuteReader();
-            while(dr.Read())
+            while (dr.Read())
             {
                 if (dr.GetValue(0).ToString().CompareTo("0") != 0)
                 {
@@ -107,21 +107,12 @@ namespace LTUBook.Account
 
             cmd.CommandText = "INSERT INTO Notifications(UserId, CreationUser, Content, FriendReq, DateCreated) VALUES (" + insVals + ");";
             int rowsAffected = cmd.ExecuteNonQuery();
-            if(rowsAffected != 1)
+            if (rowsAffected != 1)
             {
                 throw new Exception("Query to create FR returned " + rowsAffected + " affected rows");
             }
 
             button.Enabled = false;
         }
-
-        /*protected void ViewPage_Click(object sender, EventArgs e)
-        {
-            Button button = (Button)sender;
-            string[] splitStr = button.ID.ToString().Split('_');
-            string userPageId = splitStr[0];
-
-            
-        }*/
     }
 }
