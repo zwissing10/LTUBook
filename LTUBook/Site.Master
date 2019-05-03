@@ -77,11 +77,16 @@
         <div class="container body-content">
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
             </asp:ContentPlaceHolder>
-            <hr />
-                <footer class="footer">
-                    <p>&copy; <%: DateTime.Now.Year %> - LTUBook</p>
-                </footer>
         </div>
+        <footer class="footer">
+            <div class="container">
+                <br />
+                <br />
+                <hr />
+                <span class="col-xs-6 text-muted">&copy; <%: DateTime.Now.Year %> - LTUBook</span>
+                <span class="col-xs-6 text-right text-muted">Group 3: JD, CK, CW, ZW</span>
+            </div>
+        </footer>
     </form>
 </body>
 </html>

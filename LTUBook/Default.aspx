@@ -27,8 +27,6 @@
             <div class="col-md-4">
                 <a runat="server" href="~/Account/Post" class="btn btn-primary">Post</a>
             </div>
-            <br />
-            <br />
         </LoggedInTemplate>
     </asp:LoginView>
 </asp:Content>
